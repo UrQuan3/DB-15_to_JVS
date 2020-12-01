@@ -1,3 +1,10 @@
+# DB-15_to_JVS
+Adaptation of TeensyJVS for use with SNK/SuperGun style fightsticks.
+
+This repository contains the sourcecode for the DB-15_to_JVS boards I designed.  The intention is to allow users to modify code as needed for special projects like console controllers or analog inputs.
+
+I would also like to add that charcole's work is awesome.
+
 # TeensyJVS
 Jamma Video Standard (JVS) IO board implemented using a Teensy 3.1
 
