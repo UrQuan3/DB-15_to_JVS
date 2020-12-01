@@ -1,7 +1,7 @@
 # DB-15_to_JVS
 Adaptation of TeensyJVS for use with SNK/SuperGun style fightsticks.
 
-This repository contains the sourcecode for the DB-15_to_JVS boards I designed.  The intention is to allow users to modify code as needed for special projects like console controllers or analog inputs.
+This repository contains the sourcecode for the DB-15_to_JVS boards I designed.  The intention is to allow users to modify code as needed for special projects like console controllers or analog inputs.  The board and code have currently only been tested with the Teensy3.5, but should also work with the Teensy3.6 and Teensy4.1.
 
 I would also like to add that charcole's work is awesome.
 
