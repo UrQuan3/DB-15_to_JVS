@@ -5,6 +5,18 @@ This repository contains the sourcecode for the DB-15_to_JVS boards I designed. 
 
 I would also like to add that charcole's work is awesome.
 
+This code has only been tested on the following hardware:
+- Naomi 1 (jp and US BIOS)
+
+And the following games:
+- Dead or Alive 2 (US BIOS)
+- Moero! Justice Gakuen (US BIOS)
+- Marvel vs Capcom 2 (US BIOS)
+- Melty Blood Actress Again (jp BIOS)
+- Radrgy Noa (jp BIOS)
+
+All work in two player mode.
+
 # TeensyJVS
 Jamma Video Standard (JVS) IO board implemented using a Teensy 3.1
 

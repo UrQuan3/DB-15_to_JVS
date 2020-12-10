@@ -1,4 +1,4 @@
-// Code for JVS, 1 or 2 player DB-15 interfaces, and 1 or 2 coin readers.
+// Code for JVS, 1, 2, or 4 player DB-15 interfaces, and 1 or 2 coin readers.
 // All other interfaces are unmodified and untested. (UrQuan3)
 
 // JVS protocol for adding controls to a Sega Naomi
@@ -44,8 +44,8 @@ Bounce coindebouncer2 = Bounce();
 #define PIN_SENSE	3
 #define PIN_COIN_1 4
 #define PIN_COIN_2 5
-//#define PIN_COIN_3 ?  //for if I need it
-//#define PIN_COIN_4 ?
+//#define PIN_COIN_3 55  //for if I need it
+//#define PIN_COIN_4 56
 //#define PIN_LED		13
 
 //#define PLAYER_1
@@ -112,6 +112,7 @@ int coin2 = 0;
 //int coin3 = 0;  //for if I need it
 //int coin4 = 0;
 
+//Why 12 switches instead of 10?  Some later systems had 8 player buttons.
 byte features[] =
 {
   #if defined(PLAYER_1)
@@ -154,13 +155,16 @@ void setup()
   //Coin readers seem susceptible to noise.
   coindebouncer1.attach(PIN_COIN_1, INPUT_PULLUP);
   coindebouncer2.attach(PIN_COIN_2, INPUT_PULLUP);
-  //init 12 pins per player, 4 players, starting at pin 6
+  //init 12 pins per player, 4 players, starting at pin 6.  +1 due to skipping pin 13.
   for (int i = 6; i <= 54; i++)
   {
     pinMode(i, INPUT_PULLUP);
   }
   pinMode(13, OUTPUT);    //can't use this one due to LED
   digitalWrite(13, HIGH);
+  //If needed, pin 55 and 56 are connected to "coin" on player 3 & 4
+  //pinMode(55, INPUT_PULLUP);
+  //pinMode(56, INPUT_PULLUP);
 }
 
 void ReplyBytes(const byte *bytes, int numBytes)
