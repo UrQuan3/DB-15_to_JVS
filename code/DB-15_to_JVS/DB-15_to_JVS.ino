@@ -1,6 +1,9 @@
 // Code for JVS, 1, 2, or 4 player DB-15 interfaces, and 1 or 2 coin readers.
 // All other interfaces are unmodified and untested. (UrQuan3)
 
+// Update 2021-03-25: Implemented message 30: CMD_WRITECOINSUBTRACT.  Required to support the Taito Type X.
+// (Or possibly just ATLUS.  I have a sample size of 1) (UrQuan3)
+
 // JVS protocol for adding controls to a Sega Naomi
 // Intended for a Teensy 3.1 (probably overkill but I like them)
 // Just need something with a hardware UART
@@ -51,7 +54,6 @@ Bounce coindebouncer2 = Bounce();
 //#define PLAYER_1
 #define PLAYER_2
 //#define PLAYER_4
-
 
 //#define LOG(a) Serial.println(a)
 #define LOG(a) (void)0
@@ -107,8 +109,8 @@ Packet packet;
 Reply reply[2];
 int curReply = 0;
 int deviceId = -1;
-int coin1 = 0;
-int coin2 = 0;
+uint16_t coin1 = 0;
+uint16_t coin2 = 0;
 //int coin3 = 0;  //for if I need it
 //int coin4 = 0;
 
@@ -127,7 +129,7 @@ byte features[] =
   0       // End of features
   #elif defined(PLAYER_4)
   1, 4, 12, 0,    // Players=4 Switches=12
-  2, 4, 0, 0,     // 2 coin slot
+  2, 4, 0, 0,     // 4 coin slot
   //3, 3, 8, 0,   // 3 analog channels, 8-bit each (but Naomi expects 16, so 2 8's per channel)
   0       // End of features
   #endif
@@ -235,7 +237,7 @@ void ProcessPacket(struct Packet *p)
     byte *message = p->message;
     while (length > 0)
     {
-      int sz = 1;
+      int sz = 1;         //tracks size of INCOMMING message
       switch (message[0])
       {
         case CMD_RESET:
@@ -292,7 +294,7 @@ void ProcessPacket(struct Packet *p)
             {
               results[i] = 0;
             }
-            //leave results[0] set to 0
+            //leave results[0] set to 0, 10000000b = Test Mode
             //players * 12 buttons, players * 2 bytes to send
             //player 1
             results[1] |= !digitalRead(6);   //start
@@ -416,19 +418,18 @@ void ProcessPacket(struct Packet *p)
             results[2] = (result << 6) & 0xFF;
             Serial.println(result, BIN);
             */
-            // Simply don't send read results for unused users
-            for(int i=0; i < message[1]*message[2] + 1; i++)
+            /*for(int i=0; i < message[1]*message[2] + 1; i++)
             {
               Serial.println(results[i], HEX);
-            }
+            }*/
+            // Simply don't send read results for unused users
             ReplyBytes(results, message[1]*message[2] + 1);
             break;
           }
         case CMD_READCOIN:
           {
             //two most sig bits are actually status, with 00 being normal operation
-            //byte coins3[2] = {(byte)(coin3 >> 8), (byte)coin3};
-            //byte coins4[2] = {(byte)(coin4 >> 8), (byte)coin4};
+            //message[1] number of coin mechs to read (odd, you have to read all of them)
             LOG("CMD_READCOIN");
             sz = 2;
             #if defined(PLAYER_1)
@@ -436,6 +437,10 @@ void ProcessPacket(struct Packet *p)
               ReplyBytes(coins, message[1] * 2);
             #elif  defined(PLAYER_2)
               byte coins[4] = {(byte)(coin1 >> 8), (byte)coin1, (byte)(coin2 >> 8), (byte)coin2};
+              /*for(int i=0; i < message[1] * 2; i++)
+              {
+                Serial.println(coins[i], HEX);
+              }*/
               ReplyBytes(coins, message[1] * 2);
             #elif  defined(PLAYER_4)
               //not sure if I need 4 coin slots, so 2 for now
@@ -486,10 +491,31 @@ void ProcessPacket(struct Packet *p)
           Resend();
           break;
         case CMD_WRITECOINSUBTRACT:
-          LOG("CMD_WRITECOINSUBTRACT");
-          sz = 4;
-          Reply();
-          break;
+          {
+            LOG("CMD_WRITECOINSUBTRACT");
+            //message[0] = status
+            //message[1] = slot to decrement
+            //message[2-3] = 16bit value to decrement
+            sz = 4;
+            uint16_t coindec;
+            coindec = message[2];
+            coindec = coindec << 8;
+            coindec |= message[3];
+            //Serial.println(coin1, HEX);
+            //Serial.println(coin2, HEX);
+            //Serial.println(coindec, HEX);
+            if(message[1] == 1)
+            {
+              coin1 = coin1 - coindec;
+            } else if(message[1] == 2)
+            {
+              coin2 = coin2 - coindec;
+            }
+            //Serial.println(coin1, HEX);
+            //Serial.println(coin2, HEX);
+            Reply();
+            break;
+          }
         case CMD_WRITEPAYOUT:
           LOG("CMD_WRITEPAYOUT");
           sz = 4;

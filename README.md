@@ -14,8 +14,9 @@ And the following games:
 - Marvel vs Capcom 2 (US BIOS)
 - Melty Blood Actress Again (jp BIOS)
 - Radrgy Noa (jp BIOS)
+- Power Stone 2 (US BIOS)
 
-All work in two player mode.
+All work in 2-player mode.  Power Stone 2 verified in 4-player mode.
 
 # TeensyJVS
 Jamma Video Standard (JVS) IO board implemented using a Teensy 3.1
