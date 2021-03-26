@@ -6,7 +6,8 @@ This repository contains the sourcecode for the DB-15_to_JVS boards I designed. 
 I would also like to add that charcole's work is awesome.
 
 This code has only been tested on the following hardware:
-- Naomi 1 (jp and US BIOS)
+- SEGA Naomi 1 (jp and US BIOS)
+- Taito Type X
 
 And the following games:
 - Dead or Alive 2 (US BIOS)
@@ -15,8 +16,16 @@ And the following games:
 - Melty Blood Actress Again (jp BIOS)
 - Radrgy Noa (jp BIOS)
 - Power Stone 2 (US BIOS)
+- Goketsuji Ichizoku Matsuri Senzo Kuyou
 
 All work in 2-player mode.  Power Stone 2 verified in 4-player mode.
+
+Update 2021-03-26:
+Implemented command 30: CMD_WRITECOINSUBTRACT to support the Taito Type X.  (Or possibly just ATLUS, I have a sample size of 1)
+Bug: The Type X does not have a service button.  Test and Service commands must come across the JVS interface.
+
+
+***ORIGINAL README BELOW***
 
 # TeensyJVS
 Jamma Video Standard (JVS) IO board implemented using a Teensy 3.1
