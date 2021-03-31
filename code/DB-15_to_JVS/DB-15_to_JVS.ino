@@ -276,6 +276,7 @@ void ProcessPacket(struct Packet *p)
         case CMD_GETFEATURES:
           LOG("CMD_GETFEATURES");
           ReplyBytes(features, sizeof(features));
+          break;                                      //TEST THIS!!
         case CMD_SETMAINBOARDID:
           LOG("CMD_SETMAINBOARDID");
           sz = strlen((char*)&message[1]) + 1;
@@ -398,6 +399,11 @@ void ProcessPacket(struct Packet *p)
             results[8] = results[8] << 1;
             results[8] |= !digitalRead(54);
             results[8] = results[8] << 4;
+            results[0] |= !digitalRead(57);  //If 4 player, use pin 57 as test mode button
+            results[0] = results[0] << 7;    //55 and 56 are coin3 and coin4
+#else
+            results[0] |= !digitalRead(31);  //If 1 or 2 player, use pin 31 as test mode button
+            results[0] = results[0] << 7;
 #endif
 
             //the original brilliant, and inflexible, read
@@ -452,12 +458,12 @@ void ProcessPacket(struct Packet *p)
         case CMD_READANALOG:
           {
             uint8_t analog[6] = {0, 0, 0, 0, 0, 0};
+            LOG("CMD_READANALOG");
+            sz = 2;
 
             //analog reading code here
             //remember, two bytes per channel
             
-            LOG("CMD_READANALOG");
-            sz = 2;
             ReplyBytes(analog, message[1] * 2);
             break;
           }

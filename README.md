@@ -1,7 +1,7 @@
 # DB-15_to_JVS
 Adaptation of TeensyJVS for use with SNK/SuperGun style fightsticks.
 
-This repository contains the sourcecode for the DB-15_to_JVS boards I designed.  The intention is to allow users to modify code as needed for special projects like console controllers or analog inputs.  The board and code have currently only been tested with the Teensy3.5, but should also work with the Teensy3.6 and Teensy4.1.
+This repository contains the sourcecode for the DB-15_to_JVS boards I designed.  The intention is to allow users to modify code as needed for special projects like console controllers or analog inputs.  The board and code have currently only been tested with the Teensy3.5, but should also work with the Teensy3.6 and Teensy4.1.  Teensy4.1 is 1-player and 2-player only due to shortage or I/O pins.
 
 I would also like to add that charcole's work is awesome.
 
@@ -20,9 +20,11 @@ And the following games:
 
 All work in 2-player mode.  Power Stone 2 verified in 4-player mode.
 
+Updated 2021-03-31
+Added access to Test mode.  Uses I/O pin 31 in 1-player and 2-player mode, I/O pin 57 in 4-player mode.
+
 Update 2021-03-26:
-Implemented command 30: CMD_WRITECOINSUBTRACT to support the Taito Type X.  (Or possibly just ATLUS, I have a sample size of 1)
-Bug: The Type X does not have a service button.  Test and Service commands must come across the JVS interface.
+Implemented command 30: CMD_WRITECOINSUBTRACT to support the Taito Type X.  (Or possibly just ATLUS, I have a sample size of 1)  Known bug: The Type X does not have a service button.  Test and Service commands must come across the JVS interface.
 
 
 ***ORIGINAL README BELOW***
